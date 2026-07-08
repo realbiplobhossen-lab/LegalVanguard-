@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4 # লেটেস্ট v4 এ আপডেট করা হয়েছে
+      - uses: actions/checkout@v3
 
       - name: Set up Java
-        uses: actions/setup-java@v4 # লেটেস্ট v4 এ আপডেট করা হয়েছে
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -30,11 +30,17 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      - name: Pre-build & Generate Plugin Configs
+        run: |
+          # এই কমান্ডগুলো গিটহাব রানারকে বাধ্য করবে প্লাগইনগুলো অ্যান্ড্রোয়েডের সাথে লিঙ্ক করাতে
+          flutter precache --android
+          flutter build apk --config-only
+
       - name: Build APK
         run: flutter build apk --release
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4 # এখানে v3 কেটে v4 করে দেওয়া হয়েছে
+        uses: actions/upload-artifact@v3
         with:
           name: legal-vanguard-app
           path: build/app/outputs/flutter-apk/app-release.apk
