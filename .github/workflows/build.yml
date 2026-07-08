@@ -27,18 +27,26 @@ jobs:
           channel: 'stable'
           flutter-version: '3.19.0'
 
+      - name: Reconstruct Official Flutter Project
+        run: |
+          # ১. ব্যাকআপ নেওয়া: আমাদের তৈরি করা lib এবং pubspec ফাইল সাময়িকভাবে আলাদা করা
+          mkdir temp_backup
+          cp -r lib temp_backup/
+          cp pubspec.yaml temp_backup/
+          
+          # ২. আগের ত্রুটিপূর্ণ ম্যানুয়াল ফোল্ডারগুলো মুছে ফেলা
+          rm -rf android lib pubspec.yaml .metadata
+          
+          # ৩. ফ্লাটার অফিশিয়াল কমান্ড দিয়ে সম্পূর্ণ নিখুঁত অ্যান্ড্রয়েড প্রজেক্ট স্ট্রাকচার লাইভ জেনারেট করা
+          flutter create --platforms android .
+          
+          # ৪. আমাদের কাস্টম প্রীমিয়াম কোড ও ডিপেন্ডেন্সি নতুন প্রজেক্টে ফিরিয়ে আনা
+          rm -rf lib pubspec.yaml
+          cp -r temp_backup/lib .
+          cp temp_backup/pubspec.yaml .
+
       - name: Install Dependencies
         run: flutter pub get
-
-      - name: Auto-generate Configuration & Live Paths
-        run: |
-          # এই ম্যাজিক কমান্ডটি গিটহাব রানার থেকে ফ্লাটারের লাইভ ডিরেক্টরি রিড করে নিখুঁতভাবে local.properties ফাইল তৈরি করবে
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
-          echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
-          
-          # প্লাগইন ও প্রজেক্ট কনফিগারেশন সিঙ্ক করা
-          flutter precache --android
-          flutter build apk --config-only
 
       - name: Build APK
         run: flutter build apk --release
