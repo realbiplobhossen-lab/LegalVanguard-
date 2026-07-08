@@ -32,7 +32,6 @@ jobs:
 
       - name: Pre-build & Generate Plugin Configs
         run: |
-          # এই কমান্ডগুলো গিটহাব রানারকে বাধ্য করবে প্লাগইনগুলো অ্যান্ড্রোয়েডের সাথে লিঙ্ক করাতে
           flutter precache --android
           flutter build apk --config-only
 
@@ -40,7 +39,7 @@ jobs:
         run: flutter build apk --release
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # এখানে v3 পরিবর্তন করে v4 করা হয়েছে
         with:
           name: legal-vanguard-app
           path: build/app/outputs/flutter-apk/app-release.apk
