@@ -30,8 +30,13 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Pre-build & Generate Plugin Configs
+      - name: Auto-generate Configuration & Live Paths
         run: |
+          # এই ম্যাজিক কমান্ডটি গিটহাব রানার থেকে ফ্লাটারের লাইভ ডিরেক্টরি রিড করে নিখুঁতভাবে local.properties ফাইল তৈরি করবে
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+          echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
+          
+          # প্লাগইন ও প্রজেক্ট কনফিগারেশন সিঙ্ক করা
           flutter precache --android
           flutter build apk --config-only
 
@@ -39,7 +44,7 @@ jobs:
         run: flutter build apk --release
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4  # এখানে v3 পরিবর্তন করে v4 করা হয়েছে
+        uses: actions/upload-artifact@v4
         with:
           name: legal-vanguard-app
           path: build/app/outputs/flutter-apk/app-release.apk
