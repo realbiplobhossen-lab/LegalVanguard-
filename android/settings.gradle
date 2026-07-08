@@ -9,9 +9,6 @@ pluginManagement {
         if (sdkPath == null) {
             sdkPath = System.getenv("FLUTTER_ROOT")
         }
-        if (sdkPath == null) {
-            throw new GradleException("Flutter SDK not found.")
-        }
         return sdkPath
     }
     settings.ext.flutterSdkPath = flutterSdkPath()
@@ -33,5 +30,3 @@ plugins {
 
 include ":app"
 
-// ফ্লাটারের অফিশিয়াল অটোমেটিক প্লাগইন ইঞ্জেকশন লাইন
-apply from: "${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle/app_plugin_loader.gradle"
