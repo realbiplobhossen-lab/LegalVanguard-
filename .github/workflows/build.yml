@@ -34,19 +34,25 @@ jobs:
           cp -r lib temp_backup/
           cp pubspec.yaml temp_backup/
           
-          # ২. আগের ফোল্ডার মুছে ফেলা
+          # যদি রুট ডিরেক্টরিতে google-services.json থাকে, তবে তা ব্যাকআপ নেওয়া
+          if [ -f "google-services.json" ]; then cp google-services.json temp_backup/; fi
+          
+          # ২. আগের ত্রুটিপূর্ণ ফোল্ডার মুছে ফেলা
           rm -rf android lib pubspec.yaml .metadata
           
           # ৩. অফিশিয়াল প্রজেক্ট জেনারেট করা
           flutter create --platforms android --project-name=legal_vanguard .
           
-          # ৪. মডিফাইSdkVersion: গ্রেডল ফাইলে minSdkVersion ১৯ থেকে বাড়িয়ে ২১ করা (যাতে speech_to_text সাপোর্ট করে)
+          # ৪.SdkVersion মডিফাই করা (speech_to_text এর জন্য)
           sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
           
           # ৫. আমাদের কাস্টম প্রীমিয়াম কোড ফিরিয়ে আনা
           rm -rf lib pubspec.yaml
           cp -r temp_backup/lib .
           cp temp_backup/pubspec.yaml .
+          
+          # ৬. ফায়ারবেস কনফিগারেশন ফাইল অ্যান্ড্রোয়েড অ্যাপ ফোল্ডারে কপি করা
+          if [ -f "temp_backup/google-services.json" ]; then cp temp_backup/google-services.json android/app/; fi
 
       - name: Install Dependencies
         run: flutter pub get
