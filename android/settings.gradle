@@ -6,7 +6,12 @@ pluginManagement {
             propertiesFile.withReader("UTF-8") { reader -> properties.load(reader) }
         }
         def sdkPath = properties.getProperty("flutter.sdk")
-        assert sdkPath != null, "flutter.sdk not set in local.properties"
+        if (sdkPath == null) {
+            sdkPath = System.getenv("FLUTTER_ROOT")
+        }
+        if (sdkPath == null) {
+            throw new GradleException("Flutter SDK not found. Define flutter.sdk in local.properties or set FLUTTER_ROOT environment variable.")
+        }
         return sdkPath
     }
     settings.ext.flutterSdkPath = flutterSdkPath()
@@ -27,3 +32,9 @@ plugins {
 }
 
 include ":app"
+
+// এই নিচের কোডটুকু ফায়ারবেস ও বাকি সব প্লাগইনকে অটোমেটিক লিংকের মাধ্যমে খুঁজে পেতে বাধ্য করবে
+def pluginsFile = new File(rootProject.projectDir, '../.flutter-plugins-dependencies')
+if (pluginsFile.exists()) {
+    apply from: "${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+}
