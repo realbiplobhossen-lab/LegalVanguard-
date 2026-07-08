@@ -33,3 +33,10 @@ plugins {
 
 include ":app"
 
+// প্লাগইনগুলো খুঁজে না পাওয়ার সমস্যা দূর করার জন্য এই নিচের ৪টি লাইন ম্যাজিকের মতো কাজ করবে
+def flutterProjectRoot = rootProject.projectDir.parentFile
+plugins.each { plugin ->
+    if (plugin.id == "dev.flutter.flutter-gradle-plugin") {
+        apply from: "${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+    }
+}
