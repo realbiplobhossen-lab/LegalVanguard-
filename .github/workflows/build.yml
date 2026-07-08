@@ -37,8 +37,8 @@ jobs:
           # ২. আগের ত্রুটিপূর্ণ ম্যানুয়াল ফোল্ডারগুলো মুছে ফেলা
           rm -rf android lib pubspec.yaml .metadata
           
-          # ৩. ফ্লাটার অফিশিয়াল কমান্ড দিয়ে সম্পূর্ণ নিখুঁত অ্যান্ড্রয়েড প্রজেক্ট স্ট্রাকচার লাইভ জেনারেট করা
-          flutter create --platforms android .
+          # ৩. অফিশিয়াল নাম '--project-name=legal_vanguard' দিয়ে নিখুঁত প্রজেক্ট স্ট্রাকচার জেনারেট করা
+          flutter create --platforms android --project-name=legal_vanguard .
           
           # ৪. আমাদের কাস্টম প্রীমিয়াম কোড ও ডিপেন্ডেন্সি নতুন প্রজেক্টে ফিরিয়ে আনা
           rm -rf lib pubspec.yaml
