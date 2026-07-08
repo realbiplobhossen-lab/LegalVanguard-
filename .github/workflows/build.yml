@@ -29,18 +29,21 @@ jobs:
 
       - name: Reconstruct Official Flutter Project
         run: |
-          # ১. ব্যাকআপ নেওয়া: আমাদের তৈরি করা lib এবং pubspec ফাইল সাময়িকভাবে আলাদা করা
+          # ১. ব্যাকআপ নেওয়া
           mkdir temp_backup
           cp -r lib temp_backup/
           cp pubspec.yaml temp_backup/
           
-          # ২. আগের ত্রুটিপূর্ণ ম্যানুয়াল ফোল্ডারগুলো মুছে ফেলা
+          # ২. আগের ফোল্ডার মুছে ফেলা
           rm -rf android lib pubspec.yaml .metadata
           
-          # ৩. অফিশিয়াল নাম '--project-name=legal_vanguard' দিয়ে নিখুঁত প্রজেক্ট স্ট্রাকচার জেনারেট করা
+          # ৩. অফিশিয়াল প্রজেক্ট জেনারেট করা
           flutter create --platforms android --project-name=legal_vanguard .
           
-          # ৪. আমাদের কাস্টম প্রীমিয়াম কোড ও ডিপেন্ডেন্সি নতুন প্রজেক্টে ফিরিয়ে আনা
+          # ৪. মডিফাইSdkVersion: গ্রেডল ফাইলে minSdkVersion ১৯ থেকে বাড়িয়ে ২১ করা (যাতে speech_to_text সাপোর্ট করে)
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
+          
+          # ৫. আমাদের কাস্টম প্রীমিয়াম কোড ফিরিয়ে আনা
           rm -rf lib pubspec.yaml
           cp -r temp_backup/lib .
           cp temp_backup/pubspec.yaml .
