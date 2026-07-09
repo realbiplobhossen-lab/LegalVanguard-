@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:firebase_core/firebase_core.dart'; // ফায়ারবেস কোর ইম্পোর্ট করা হলো
+import 'package:firebase_core/firebase_core.dart';
 import 'database_service.dart';
 
-void main() async {
+void main() {
   // ১. ফ্লাটার উইজেট বাইন্ডিং নিশ্চিত করা
   WidgetsFlutterBinding.ensureInitialized();
   
-  // ২. ফায়ারবেস ক্লাউড সিস্টেমকে অ্যাপের সাথে সচল করা
-  await Firebase.initializeApp();
-  
+  // ২. অ্যাপ সরাসরি রান হবে, ফায়ারবেসের জন্য লোডিং স্ক্রিনে আটকে থাকবে না
   runApp(const LegalVanguardApp());
+  
+  // ৩. ব্যাকগ্রাউন্ডে ফায়ারবেস সচল হতে থাকবে
+  Firebase.initializeApp().catchError((error) {
+    print("Firebase Initialization Error: $error");
+  });
 }
 
 class LegalVanguardApp extends StatelessWidget {
@@ -67,7 +70,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else {
       setState(() => _isListening = false);
       _speech.stop();
-      // ভয়েস শেষ হওয়া মাত্রই তা ফায়ারবেস ক্লাউডে অটোমেটিক সেভ হয়ে যাবে
+      
+      // ভয়েস শেষ হওয়া মাত্রই তা ফায়ারবেস ক্লাউডে অফলাইনে/অনলাইনে সেভ হবে
       if (_voiceText.isNotEmpty && _voiceText != "সিনিয়র যা বলবেন তা এখানে লাইভ টাইপ হবে...") {
         await _dbService.saveTodayTask(_voiceText);
         if (mounted) {
@@ -91,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // এখানে ডাবল 'Cross' ফিক্স করা হয়েছে
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // প্রিমিয়াম স্ট্যাটাস কার্ড
             Container(
@@ -135,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: 20),
             
-            // প্রীমিয়াম অ্যানিমেটেড মাইক্রোফোন বাটন
+            // പ്രീമിയം অ্যানিমেটেড মাইক্রোফোন বাটন
             Center(
               child: GestureDetector(
                 onTap: _listen,
@@ -166,3 +170,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
+
