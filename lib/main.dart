@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart'; // ফায়ারবেস �
 import 'database_service.dart';
 
 void main() async {
-  // ১. ফ্লাটার উইজেট বাইন্ডিং নিশ্চিত করা (এটি সাদা স্ক্রিন দূর করার মূল চাবিকাঠি)
+  // ১. ফ্লাটার উইজেট বাইন্ডিং নিশ্চিত করা
   WidgetsFlutterBinding.ensureInitialized();
   
   // ২. ফায়ারবেস ক্লাউড সিস্টেমকে অ্যাপের সাথে সচল করা
@@ -14,7 +14,7 @@ void main() async {
 }
 
 class LegalVanguardApp extends StatelessWidget {
-  const LegalVanguardApp({super.key}); // কি-এর আধুনিক ফ্লাটার স্ট্রাকচার ফিক্স
+  const LegalVanguardApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: Cross CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start, // এখানে ডাবল 'Cross' ফিক্স করা হয়েছে
           children: [
             // প্রিমিয়াম স্ট্যাটাস কার্ড
             Container(
@@ -166,4 +166,3 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
-
