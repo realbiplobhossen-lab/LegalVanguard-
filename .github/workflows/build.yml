@@ -47,13 +47,16 @@ jobs:
           # ৫. অ্যান্ড্রোয়েড ম্যানিফেস্টে ইন্টারনেট ও অডিও পারমিশন যুক্ত করা
           sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"\/>\n    <uses-permission android:name="android.permission.RECORD_AUDIO"\/>' android/app/src/main/AndroidManifest.xml
           
-          # ★ ৫.১. অ্যাপের ডিসপ্লে নাম "app" থেকে পরিবর্তন করে "LegisMate" করা
+          # ৫.১. অ্যাপের ডিসপ্লে নাম পরিবর্তন করে "LegisMate" করা
           sed -i 's/android:label="app"/android:label="LegisMate"/g' android/app/src/main/AndroidManifest.xml
+          
+          # ★ ৫.২. ৪MD (403 Forbidden) এরর দূর করতে বিকল্প গুগল ও মাভেন মিরর যুক্ত করা
+          sed -i 's/mavenCentral()/google()\n        mavenCentral()\n        maven { url "https:\/\/plugins.gradle.org\/m2\/" }/g' android/build.gradle
           
           # ৬. settings.gradle ফাইলে ফায়ারবেস প্লাগইন সংস্করণসহ যুক্ত করা
           sed -i '/plugins {/a \    id "com.google.gms.google-services" version "4.4.1" apply false' android/settings.gradle
           
-          # ۷. app/build.gradle ফাইলে ফায়ারবেস প্লাগইন অ্যাপ্লাই করা
+          # ৭. app/build.gradle ফাইলে ফায়ারবেস প্লাগইন অ্যাপ্লাই করা
           sed -i '/plugins {/a \    id "com.google.gms.google-services"' android/app/app/build.gradle || sed -i '/plugins {/a \    id "com.google.gms.google-services"' android/app/build.gradle
           
           # ৮. আমাদের কাস্টম কোড এবং google-services.json ফিরিয়ে আনা
