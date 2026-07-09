@@ -15,7 +15,7 @@ class LegalVanguardApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'LegalVanguard',
+      title: 'LegisMate',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -32,7 +32,6 @@ class LegalVanguardApp extends StatelessWidget {
   }
 }
 
-// মূল নেভিগেশন স্ক্রিন (যা বিভিন্ন পেজ বা মেনু কন্ট্রোল করবে)
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
 
@@ -72,7 +71,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 }
 
-// ১. ড্যাশবোর্ড স্ক্রিন (হোম পেজ)
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -120,7 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LegalVanguard হোম', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('LegisMate ড্যাশবোর্ড', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFF0A192F),
         centerTitle: true,
         actions: [
@@ -132,7 +130,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // প্রিমিয়াম স্ট্যাটাস কার্ড
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -150,8 +147,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            
-            // কুইক স্ট্যাটাস কাউন্টার
             Row(
               children: [
                 Expanded(child: _buildStatCard('আজকের হাজিরা', '৫ টি', Colors.blue.shade800)),
@@ -162,8 +157,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 20),
             const Text('🎙️ সিনিয়রের ভয়েস নোট রেকর্ডার', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0A192F))),
             const SizedBox(height: 10),
-            
-            // ভয়েস এরিয়া
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -177,7 +170,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             const SizedBox(height: 15),
-            
             Center(
               child: FloatingActionButton.large(
                 onPressed: _listen,
@@ -208,7 +200,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-// ২. কেস ডায়েরি স্ক্রিন
 class CaseDiaryScreen extends StatelessWidget {
   const CaseDiaryScreen({super.key});
 
@@ -243,7 +234,6 @@ class CaseDiaryScreen extends StatelessWidget {
   }
 }
 
-// ৩. মক্কেল ডাটাবেজ স্ক্রিন
 class ClientDatabaseScreen extends StatelessWidget {
   const ClientDatabaseScreen({super.key});
 
@@ -261,7 +251,8 @@ class ClientDatabaseScreen extends StatelessWidget {
             SearchBar(
               hintText: "মক্কেলের নাম বা ফোন নম্বর দিয়ে খুঁজুন...",
               leading: const Icon(Icons.search),
-              padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
+              // এখানে ৩.১৯.০ ভার্সনের জন্য WidgetStatePropertyAll ফিক্স করা হয়েছে
+              padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
             ),
             const SizedBox(height: 15),
             Expanded(
@@ -270,14 +261,14 @@ class ClientDatabaseScreen extends StatelessWidget {
                   Card(
                     child: ListTile(
                       title: Text('মোঃ আবদুর রহমান'),
-                      subtitle: Text('ফোন: ০১৭xxxxxxxx\nমামলার ধরন: দেওয়ানি জমিজমা সংক্রান্ত'),
+                      subtitle: Text('ফোন: ০১৭xxxxxxxx\n实时 মামলার ধরন: দেওয়ানি জমিজমা সংক্রান্ত'),
                       trailing: Icon(Icons.phone, color: Colors.green),
                     ),
                   ),
                   Card(
                     child: ListTile(
                       title: Text('মোসাম্মৎ রোকসানা বেগম'),
-                      subtitle: Text('ফোন: ০১৮xxxxxxxx\nমামলার ধরন: পারিবারিক ভরণপোষণ'),
+                      subtitle: Text('ফোন: ০১৮xxxxxxxx\n实时 মামলার ধরন: পারিবারিক ভরণপোষণ'),
                       trailing: Icon(Icons.phone, color: Colors.green),
                     ),
                   ),
@@ -291,7 +282,6 @@ class ClientDatabaseScreen extends StatelessWidget {
   }
 }
 
-// ৪. সেটিংস স্ক্রিন
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -319,7 +309,7 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline, color: Color(0xFF0A192F)),
-            title: const Text('LegalVanguard সংস্করণ'),
+            title: const Text('LegisMate সংস্করণ'),
             subtitle: const Text('v1.0.0 (রিলিজ সংস্করণ)'),
             trailing: TextButton(onPressed: () {}, child: const Text('চেক আপডেট')),
           ),
@@ -328,3 +318,4 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+
