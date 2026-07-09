@@ -13,11 +13,13 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
   bool _isListening = false;
   final TextEditingController _voiceController = TextEditingController();
 
+  // আজকের করণীয় কাজের ডাইনামিক লিস্ট
   final List<String> _todayTasks = [
     "কজ লিস্ট চেক করা",
     "সিনিয়র আইনজীবীর সাথে ফাইলিং নিয়ে আলোচনা",
   ];
 
+  // ২৪টি ফিচারের তালিকা
   final List<Map<String, dynamic>> _features = [
     {"name": "Dashboard", "icon": Icons.space_dashboard_rounded, "sub": "আজকের কজ লিস্ট ও শুনানি"},
     {"name": "Case Management", "icon": Icons.folder_special_rounded, "sub": "কেসের যাবতীয় রেকর্ড ও টাইমলাইন"},
@@ -37,15 +39,16 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
     {"name": "Court Directory", "icon": Icons.map_rounded, "sub": "আদালতের ঠিকানা ও বিচারকদের তালিকা"},
     {"name": "Contact Directory", "icon": Icons.badge_rounded, "sub": "আইনজীবী, মুহুরি ও নোটারী পাবলিক যোগাযোগ"},
     {"name": "Legal Research Notebook", "icon": Icons.collections_bookmark_rounded, "sub": "ব্যক্তিগত গবেষণা নোটবুক ও ফোল্ডার"},
-    {"name": "AI Timeline", "icon": Icons.timeline_rounded, "sub": "मामলার গতিপ্রকৃতির গ্রাফিকাল রূপ"},
+    {"name": "AI Timeline", "icon": Icons.timeline_rounded, "sub": "মামলার গতিপ্রকৃতির গ্রাফিকাল রূপ"},
     {"name": "To-Do List", "icon": Icons.fact_check_rounded, "sub": "আজকের সারাদিনের করণীয় কাজের তালিকা"},
     {"name": "Calendar Sync", "icon": Icons.calendar_month_rounded, "sub": "গুগল ক্যালেন্ডার ইন্টিগ্রেশন"},
     {"name": "Chamber Management", "icon": Icons.corporate_fare_rounded, "sub": "জুনিয়র ও কর্মচারীদের টাস্ক এসাইন"},
-    // এখানে আইকনটি ফিক্স করা হয়েছে যেন বিল্ড ক্র্যাশ না করে
+    // ৪৬ নম্বর লাইনের সমাধান: এখানে ওল্ড আইকন পরিবর্তন করে ইউনিভার্সাল আইকন দেওয়া হয়েছে
     {"name": "Secure Vault", "icon": Icons.enhanced_encryption_rounded, "sub": "ফিঙ্গারপ্রিন্ট ও এনক্রিপ্টেড ফাইল সিকিউরিটি"},
     {"name": "Offline Mode", "icon": Icons.signal_wifi_off_rounded, "sub": "ইন্টারনেট ছাড়া ডেটা ও আইন দেখার সুবিধা"},
   ];
 
+  // গুগল收藏লেট স্টাইলের নিখুঁত রিয়েল-টাইম বাংলা ভয়েস টাইপিং লজিক
   void _startListening() async {
     if (!_isListening) {
       bool available = await _speech.initialize(
@@ -55,7 +58,7 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
       if (available) {
         setState(() => _isListening = true);
         _speech.listen(
-          localeId: 'bn_BD',
+          localeId: 'bn_BD', // খাঁটি বাংলা ভাষা ও ফন্টের জন্য বাধ্যতামূলক
           onResult: (val) {
             setState(() {
               _voiceController.text = val.recognizedWords;
@@ -90,6 +93,7 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
       ),
       body: Column(
         children: [
+          // সিনিয়রের মর্নিং ভয়েস সেকশন (স্ক্রিনশটের মতো ইনপুট বক্স ডিজাইন)
           Padding(
             padding: const EdgeInsets.all(14.0),
             child: Container(
@@ -113,6 +117,7 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
                       ),
                     ),
                   ),
+                  // স্ক্রিনশটের মতো লাল গোল দাগ চিহ্নিত স্থানে মাইক্রোফোন বাটন
                   GestureDetector(
                     onTap: _startListening,
                     child: CircleAvatar(
@@ -130,6 +135,7 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
             ),
           ),
 
+          // ডাইনামিক লাইভ আপডেট: আজকের করণীয় কাজ
           if (_todayTasks.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14.0),
@@ -151,11 +157,12 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
             ),
           const SizedBox(height: 10),
 
+          // ২৪টি ফিচারের আকর্ষণীয় ও প্রিমিয়াম গ্রিড ড্যাশবোর্ড
           Expanded(
             child: GridView.builder(
               padding: const EdgeInsets.all(14),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: 2, // প্রতি সারিতে ২টি বাটন প্রিমিয়াম লুকের জন্য
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 1.35,
@@ -203,6 +210,7 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
     );
   }
 
+  // প্রতিটি বাটনে ক্লিক করলে চমৎকার ইউজার ইন্টারফেসে প্রবেশের জন্য ডাইনামিক ফাংশন
   void _openFeatureDetails(BuildContext context, String title, String subtitle) {
     showModalBottomSheet(
       context: context,
@@ -230,6 +238,8 @@ class _AdvancedDashboardState extends State<AdvancedDashboard> {
               ),
               Text(subtitle, style: const TextStyle(fontSize: 13, color: Colors.grey)),
               const Divider(height: 30),
+              
+              // ইন্টারেক্টিভ ইন্টারফেস বডি
               Expanded(
                 child: Center(
                   child: Column(
