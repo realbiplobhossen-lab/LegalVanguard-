@@ -19,11 +19,11 @@ class LegalVanguardApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        primaryColor: const Color(0xFF0A192F),
+        primaryColor: const Color(0xFF0A192F), // রয়েল ডার্ক ব্লু
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF0A192F),
           primary: const Color(0xFF0A192F),
-          secondary: const Color(0xFFD4AF37),
+          secondary: const Color(0xFFD4AF37), // গোল্ডেন প্রীমিয়াম টাচ
         ),
         scaffoldBackgroundColor: const Color(0xFFF4F6F9),
       ),
@@ -44,9 +44,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = [
     const DashboardScreen(),
-    const CaseDiaryScreen(),
-    const ClientDatabaseScreen(),
-    const SettingsScreen(),
+    const CaseManagementScreen(),
+    const LegalLibraryScreen(),
+    const ChamberToolsScreen(),
   ];
 
   @override
@@ -55,22 +55,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       body: _screens[_selectedIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+        onDestinationSelected: (index) => setState(() => _selectedIndex = index),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.dashboard_rounded), label: 'ড্যাশবোর্ড'),
-          NavigationDestination(icon: Icon(Icons.menu_book_rounded), label: 'কেস ডায়েরি'),
-          NavigationDestination(icon: Icon(Icons.people_alt_rounded), label: 'মক্কেল তালিকা'),
-          NavigationDestination(icon: Icon(Icons.settings_rounded), label: 'সেটিংস'),
+          NavigationDestination(icon: Icon(Icons.gavel_rounded), label: 'কেস ডায়েরি'),
+          NavigationDestination(icon: Icon(Icons.menu_book_rounded), label: 'আইন লাইব্রেরি'),
+          NavigationDestination(icon: Icon(Icons.business_center_rounded), label: 'চেম্বার টুলস'),
         ],
       ),
     );
   }
 }
 
+// ================= ১. প্রিমিয়াম ড্যাশবোর্ড স্ক্রিন =================
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -82,7 +79,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final DatabaseService _dbService = DatabaseService();
   late stt.SpeechToText _speech;
   bool _isListening = false;
-  String _voiceText = "সিনিয়র যা বলবেন তা এখানে লাইভ টাইপ হবে...";
+  String _voiceText = "সিনিয়র প্রতিদিন সকালে মোবাইল মুখের সামনে নিয়ে যা বলবেন (যেমন: আজকের হাজিরা, কজ লিস্ট, পিটিশন, ফাইল রেডি), তা এখানে হুবহু টাইপ হবে...";
 
   @override
   void initState() {
@@ -103,11 +100,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else {
       setState(() => _isListening = false);
       _speech.stop();
-      if (_voiceText.isNotEmpty && _voiceText != "সিনিয়র যা বলবেন তা এখানে লাইভ টাইপ হবে...") {
+      if (_voiceText.isNotEmpty && !_voiceText.startsWith("সিনিয়র প্রতিদিন")) {
         await _dbService.saveTodayTask(_voiceText);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('আজকের করণীয় তালিকায় নোটটি সেভ হয়েছে!')),
+            const SnackBar(content: Text('সিনিয়রের ভয়েস নোট "আজকের করণীয় কাজ" তালিকায় সেভ হয়েছে!')),
           );
         }
       }
@@ -122,200 +119,232 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: const Color(0xFF0A192F),
         centerTitle: true,
         actions: [
-          IconButton(icon: const Icon(Icons.notifications_active, color: Colors.white), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.security, color: Color(0xFFD4AF37)), onPressed: () {}), // Secure Vault
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // প্রিমিয়াম চেম্বার স্ট্যাটাস কার্ড
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xFF0A192F),
                 borderRadius: BorderRadius.circular(15),
+                boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))],
               ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('অ্যাডভোকেট চেম্বার অ্যাসিস্ট্যান্ট', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 13, fontWeight: FontWeight.w500)),
+                  Text('DIGITAL LEGAL CHAMBER', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 12, fontWeight: FontWeight.bold)),
                   SizedBox(height: 5),
-                  Text('আজকের লক্ষ্য: সততা ও দক্ষতা', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('আজকের লক্ষ্য: সততা, নিষ্ঠা ও দক্ষতা', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            Row(
+
+            // কুইক কাউন্টার প্যানেল (Dashboard Feature 1)
+            const Text('📊 কুইক ওভারভিউ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0A192F))),
+            const SizedBox(height: 10),
+            GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 1.1,
               children: [
-                Expanded(child: _buildStatCard('আজকের হাজিরা', '৫ টি', Colors.blue.shade800)),
-                const SizedBox(width: 10),
-                Expanded(child: _buildStatCard('নতুন মক্কেল', '৩ জন', Colors.amber.shade800)),
+                _buildCountCard('আজকের কজ লিস্ট', '৮ টি', Colors.blue.shade800),
+                _buildCountCard('জরুরি কাজ', '৩ টি', Colors.red.shade700),
+                _buildCountCard('বকেয়া ফি', '৳৪৫,০০০', Colors.emerald.shade800),
               ],
             ),
-            const SizedBox(height: 20),
-            const Text('🎙️ সিনিয়রের ভয়েস নোট রেকর্ডার', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0A192F))),
+            const SizedBox(height: 25),
+
+            // সিনিয়রের ভয়েস কমান্ড সেকশন (Feature 11 & 20)
+            const Text('🎙️ সিনিয়রের মর্নিং ভয়েস নির্দেশিকা (অটো টেক্সট)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0A192F))),
             const SizedBox(height: 10),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: SingleChildScrollView(child: Text(_voiceText, style: const TextStyle(fontSize: 15, height: 1.4))),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              minHeight: 120,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: _isListening ? Colors.red : Colors.grey.shade300, width: 1.5),
+              ),
+              child: SingleChildScrollView(
+                child: Text(_voiceText, style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.4, fontWeight: _isListening ? FontWeight.bold : FontWeight.normal)),
               ),
             ),
             const SizedBox(height: 15),
             Center(
-              child: FloatingActionButton.large(
-                onPressed: _listen,
-                backgroundColor: _isListening ? Colors.red : const Color(0xFF0A192F),
-                child: Icon(_isListening ? Icons.stop : Icons.mic, size: 36, color: const Color(0xFFD4AF37)),
+              child: Column(
+                children: [
+                  FloatingActionButton.large(
+                    onPressed: _listen,
+                    backgroundColor: _isListening ? Colors.red : const Color(0xFF0A192F),
+                    child: Icon(_isListening ? Icons.stop : Icons.mic, size: 36, color: const Color(0xFFD4AF37)),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(_isListening ? 'রেকর্ড হচ্ছে... সিনিয়রের কথা শেষ হলে বন্ধ করুন' : 'সকালে সিনিয়রের নির্দেশনা রেকর্ড করতে চাপুন', style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                ],
               ),
             ),
-            const SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatCard(String title, String count, Color color) {
+  Widget _buildCountCard(String title, String count, Color color) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(12)),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(color: Colors.white70, fontSize: 13)),
-          const SizedBox(height: 5),
-          Text(count, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+          Text(title, style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w500)),
+          const SizedBox(height: 4),
+          Text(count, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
 }
 
-class CaseDiaryScreen extends StatelessWidget {
-  const CaseDiaryScreen({super.key});
+// ================= ২. কেস এবং ক্লায়েন্ট ম্যানেজমেন্ট =================
+class CaseManagementScreen extends StatelessWidget {
+  const CaseManagementScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ডিজিটাল কেস ডায়েরি', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF0A192F),
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: const CircleAvatar(backgroundColor: Color(0xFF0A192F), child: Icon(Icons.gavel, color: Colors.white)),
-              title: Text('মামলা নং: CR-${120 + index}/2026'),
-              subtitle: Text('পরবর্তী তারিখ: ${10 + index}/০৭/২০২৬\nপদক্ষেপ: হাজিরার জন্য ধার্য দিন'),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: const Color(0xFF0A192F),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-    );
-  }
-}
-
-class ClientDatabaseScreen extends StatelessWidget {
-  const ClientDatabaseScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('মক্কেল প্রোফাইল ও ডাটাবেজ', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF0A192F),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            SearchBar(
-              hintText: "মক্কেলের নাম বা ফোন নম্বর দিয়ে খুঁজুন...",
-              leading: const Icon(Icons.search),
-              // এখানে ৩.১৯.০ ভার্সনের জন্য WidgetStatePropertyAll ফিক্স করা হয়েছে
-              padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
-            ),
-            const SizedBox(height: 15),
-            Expanded(
-              child: ListView(
-                children: const [
-                  Card(
-                    child: ListTile(
-                      title: Text('মোঃ আবদুর রহমান'),
-                      subtitle: Text('ফোন: ০১৭xxxxxxxx\n实时 মামলার ধরন: দেওয়ানি জমিজমা সংক্রান্ত'),
-                      trailing: Icon(Icons.phone, color: Colors.green),
-                    ),
-                  ),
-                  Card(
-                    child: ListTile(
-                      title: Text('মোসাম্মৎ রোকসানা বেগম'),
-                      subtitle: Text('ফোন: ০১৮xxxxxxxx\n实时 মামলার ধরন: পারিবারিক ভরণপোষণ'),
-                      trailing: Icon(Icons.phone, color: Colors.green),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('অ্যাপ সেটিংস', style: TextStyle(color: Colors.white)),
+        title: const Text('কেস ও মক্কেল ডায়েরি', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF0A192F),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const ListTile(
-            leading: Icon(Icons.account_circle, color: Color(0xFF0A192F)),
-            title: Text('প্রোফাইল কনফিগারেশন'),
-            subtitle: Text('আইনজীবী ও চেম্বারের নাম পরিবর্তন'),
-          ),
-          const Divider(),
-          const ListTile(
-            leading: Icon(Icons.cloud_sync, color: Color(0xFF0A192F)),
-            title: Text('ফায়ারবেস ক্লাউড সিঙ্ক'),
-            subtitle: Text('অফলাইন ডাটা সার্ভারে ব্যাকআপ করুন'),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.info_outline, color: Color(0xFF0A192F)),
-            title: const Text('LegisMate সংস্করণ'),
-            subtitle: const Text('v1.0.0 (রিলিজ সংস্করণ)'),
-            trailing: TextButton(onPressed: () {}, child: const Text('চেক আপডেট')),
-          ),
+          _buildMenuTile(Icons.folder_shared_rounded, 'Case Management', 'Case Title, No, Court, Timeline, Evidence, Order', () {}),
+          _buildMenuTile(Icons.assignment_ind_rounded, 'Client Management', 'ছবি, NID, বকেয়া, WhatsApp Shortcut, Call Button', () {}),
+          _buildMenuTile(Icons.calendar_month_rounded, 'Court Diary & Reminders', 'Daily, Court & Judge Wise Diary, Limitation Calculator', () {}),
+          _buildMenuTile(Icons.analytics_rounded, 'AI Timeline & Evidence Manager', 'পুরো কেস টাইমলাইন এবং এক্সিবিট নাম্বার ট্র্যাকিং', () {}),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMenuTile(IconData icon, String title, String subtitle, VoidCallback onTap) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(backgroundColor: const Color(0xFF0A192F), child: Icon(icon, color: const Color(0xFFD4AF37))),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+        onTap: onTap,
       ),
     );
   }
 }
 
+// ================= ৩. আইন ও ড্রাফটিং লাইব্রেরি (AI সহ) =================
+class LegalLibraryScreen extends StatelessWidget {
+  const LegalLibraryScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('আইন ও ড্রাফট রিসোর্স', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF0A192F),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SearchBar(
+              hintText: "Section Search: cheating, 420, bail...",
+              leading: const Icon(Icons.search),
+              padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                _buildMenuTile(Icons.psychology_rounded, 'AI Legal Assistant (শক্তি)', 'Draft Bail Petition, Explain Section, Summarize Judgment', () {}),
+                _buildMenuTile(Icons.gavel_rounded, 'Bangladesh Laws Library (Offline)', 'Constitution, Penal Code, CPC, CrPC, Evidence Act', () {}),
+                _buildMenuTile(Icons.description_rounded, 'Legal Draft Library', 'Plaint, Writ, Appeal, Bail Petition, Templates', () {}),
+                _buildMenuTile(Icons.find_in_page_rounded, 'Case Law Database', 'Citation, Ratio Decidendi, Principles, Keywords', () {}),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuTile(IconData icon, String title, String subtitle, VoidCallback onTap) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(backgroundColor: const Color(0xFF0A192F), child: Icon(icon, color: const Color(0xFFD4AF37))),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+// ================= ৪. চেম্বার অপারেশনস এবং সেটিংস =================
+class ChamberToolsScreen extends StatelessWidget {
+  const ChamberToolsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chamber Management', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF0A192F),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildMenuTile(Icons.document_scanner_rounded, 'Document Scanner & OCR', 'Scan documents, Make Searchable PDF', () {}),
+          _buildMenuTile(Icons.payments_rounded, 'Fee & Account Management', 'Income, Expense, Receipt, Accounts Report', () {}),
+          _buildMenuTile(Icons.contact_phone_rounded, 'Directories (Court & Contacts)', 'Lawyers, Judges, Typists, Court Address Map', () {}),
+          _buildMenuTile(Icons.cloud_sync_rounded, 'Cloud Backup & Offline Vault', 'Google Drive, Dropbox, Local Storage encryption', () {}),
+          const Divider(),
+          const ListTile(
+            leading: Icon(Icons.workspace_premium_rounded, color: Color(0xFFD4AF37)),
+            title: Text('ভবিষ্যতের আপকামিং ফিচারস'),
+            subtitle: Text('AI Case Prediction, Client Portal, e-Signature, Dark Mode'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuTile(IconData icon, String title, String subtitle, VoidCallback onTap) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(backgroundColor: const Color(0xFF0A192F), child: Icon(icon, color: const Color(0xFFD4AF37))),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+        onTap: onTap,
+      ),
+    );
+  }
+}
