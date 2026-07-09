@@ -19,11 +19,11 @@ class LegalVanguardApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        primaryColor: const Color(0xFF0A192F), // রয়েল ডার্ক ব্লু
+        primaryColor: const Color(0xFF0A192F), 
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF0A192F),
           primary: const Color(0xFF0A192F),
-          secondary: const Color(0xFFD4AF37), // গোল্ডেন প্রীমিয়াম টাচ
+          secondary: const Color(0xFFD4AF37), 
         ),
         scaffoldBackgroundColor: const Color(0xFFF4F6F9),
       ),
@@ -60,14 +60,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           NavigationDestination(icon: Icon(Icons.dashboard_rounded), label: 'ড্যাশবোর্ড'),
           NavigationDestination(icon: Icon(Icons.gavel_rounded), label: 'কেস ডায়েরি'),
           NavigationDestination(icon: Icon(Icons.menu_book_rounded), label: 'আইন লাইব্রেরি'),
-          NavigationDestination(icon: Icon(Icons.business_center_rounded), label: 'চেম্বার টুলস'),
+          NavigationDestination(icon: Icon(Icons.business_center_rounded), label: 'চেম্বারツール'),
         ],
       ),
     );
   }
 }
 
-// ================= ১. প্রিমিয়াম ড্যাশবোর্ড স্ক্রিন =================
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -119,7 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: const Color(0xFF0A192F),
         centerTitle: true,
         actions: [
-          IconButton(icon: const Icon(Icons.security, color: Color(0xFFD4AF37)), onPressed: () {}), // Secure Vault
+          IconButton(icon: const Icon(Icons.security, color: Color(0xFFD4AF37)), onPressed: () {}), 
         ],
       ),
       body: SingleChildScrollView(
@@ -127,7 +126,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // প্রিমিয়াম চেম্বার স্ট্যাটাস কার্ড
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -147,7 +145,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: 20),
 
-            // কুইক কাউন্টার প্যানেল (Dashboard Feature 1)
             const Text('📊 কুইক ওভারভিউ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0A192F))),
             const SizedBox(height: 10),
             GridView.count(
@@ -160,18 +157,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 _buildCountCard('আজকের কজ লিস্ট', '৮ টি', Colors.blue.shade800),
                 _buildCountCard('জরুরি কাজ', '৩ টি', Colors.red.shade700),
-                _buildCountCard('বকেয়া ফি', '৳৪৫,০০০', Colors.emerald.shade800),
+                // এখানে Colors.emerald ফিক্স করে Colors.teal করা হয়েছে
+                _buildCountCard('বকেয়া ফি', '৳৪৫,০০০', Colors.teal.shade800),
               ],
             ),
             const SizedBox(height: 25),
 
-            // সিনিয়রের ভয়েস কমান্ড সেকশন (Feature 11 & 20)
             const Text('🎙️ সিনিয়রের মর্নিং ভয়েস নির্দেশিকা (অটো টেক্সট)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0A192F))),
             const SizedBox(height: 10),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(15),
-              minHeight: 120,
+              // এখানে সরাসরি minHeight ফিক্স করে constraints ব্যবহার করা হয়েছে
+              constraints: const BoxConstraints(minHeight: 120),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -218,7 +216,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-// ================= ২. কেস এবং ক্লায়েন্ট ম্যানেজমেন্ট =================
 class CaseManagementScreen extends StatelessWidget {
   const CaseManagementScreen({super.key});
 
@@ -255,7 +252,6 @@ class CaseManagementScreen extends StatelessWidget {
   }
 }
 
-// ================= ৩. আইন ও ড্রাফটিং লাইব্রেরি (AI সহ) =================
 class LegalLibraryScreen extends StatelessWidget {
   const LegalLibraryScreen({super.key});
 
@@ -306,7 +302,6 @@ class LegalLibraryScreen extends StatelessWidget {
   }
 }
 
-// ================= ৪. চেম্বার অপারেশনস এবং সেটিংস =================
 class ChamberToolsScreen extends StatelessWidget {
   const ChamberToolsScreen({super.key});
 
