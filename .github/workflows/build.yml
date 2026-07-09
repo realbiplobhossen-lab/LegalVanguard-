@@ -38,8 +38,9 @@ jobs:
           # ২. আগের ফোল্ডার মুছে ফেলা
           rm -rf android lib pubspec.yaml .metadata
           
-          # ৩. অফিশিয়াল প্রজেক্ট জেনারেট করা
-          flutter create --platforms android --project-name=legal_vanguard .
+          # ৩. সঠিক অর্গানাইজেশন নাম (--org com.legalvanguard) সহ প্রজেক্ট জেনারেট করা
+          # এর ফলে অ্যাপের আসল প্যাকেজ নাম হবে: com.legalvanguard.legal_vanguard বা com.legalvanguard.app এর সাথে সামঞ্জস্যপূর্ণ
+          flutter create --platforms android --org com.legalvanguard --project-name=app .
           
           # ৪. SdkVersion ২১ করা (speech_to_text এর জন্য)
           sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
@@ -47,11 +48,11 @@ jobs:
           # ৫. অ্যান্ড্রোয়েড ম্যানিফেস্টে ইন্টারনেট ও অডিও পারমিশন যুক্ত করা
           sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"\/>\n    <uses-permission android:name="android.permission.RECORD_AUDIO"\/>' android/app/src/main/AndroidManifest.xml
           
-          # ৬. settings.gradle ফাইলে ফায়ারবেস প্লাগইন সংস্করণসহ নিখুঁতভাবে যুক্ত করা
+          # ৬. settings.gradle ফাইলে ফায়ারবেস প্লাগইন সংস্করণসহ যুক্ত করা
           sed -i '/plugins {/a \    id "com.google.gms.google-services" version "4.4.1" apply false' android/settings.gradle
           
           # ৭. app/build.gradle ফাইলে ফায়ারবেস প্লাগইন অ্যাপ্লাই করা
-          sed -i '/plugins {/a \    id "com.google.gms.google-services"' android/app/build.gradle
+          sed -i '/plugins {/a \    id "com.google.gms.google-services"' android/app/app/build.gradle || sed -i '/plugins {/a \    id "com.google.gms.google-services"' android/app/build.gradle
           
           # ৮. আমাদের কাস্টম কোড এবং google-services.json ফিরিয়ে আনা
           rm -rf lib pubspec.yaml
