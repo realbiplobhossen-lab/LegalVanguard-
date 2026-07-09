@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:firebase_core/firebase_core.dart'; // ফায়ারবেস কোর ইম্পোর্ট করা হলো
 import 'database_service.dart';
 
-void main() {
-  // দ্রষ্টব্য: ফায়ারবেস কনফিগারেশন করার পর WidgetsFlutterBinding.ensureInitialized() এবং Firebase.initializeApp() যোগ করতে হবে।
+void main() async {
+  // ১. ফ্লাটার উইজেট বাইন্ডিং নিশ্চিত করা (এটি সাদা স্ক্রিন দূর করার মূল চাবিকাঠি)
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // ২. ফায়ারবেস ক্লাউড সিস্টেমকে অ্যাপের সাথে সচল করা
+  await Firebase.initializeApp();
+  
   runApp(const LegalVanguardApp());
 }
 
 class LegalVanguardApp extends StatelessWidget {
-  const LegalVanguardApp({key});
+  const LegalVanguardApp({super.key}); // কি-এর আধুনিক ফ্লাটার স্ট্রাকচার ফিক্স
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class LegalVanguardApp extends StatelessWidget {
 }
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({key});
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -64,9 +70,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // ভয়েস শেষ হওয়া মাত্রই তা ফায়ারবেস ক্লাউডে অটোমেটিক সেভ হয়ে যাবে
       if (_voiceText.isNotEmpty && _voiceText != "সিনিয়র যা বলবেন তা এখানে লাইভ টাইপ হবে...") {
         await _dbService.saveTodayTask(_voiceText);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('আজকের করণীয় তালিকায় নোটটি সফলভাবে সেভ হয়েছে!')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('আজকের করণীয় তালিকায় নোটটি সফলভাবে সেভ হয়েছে!')),
+          );
+        }
       }
     }
   }
@@ -83,7 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: Cross CrossAxisAlignment.start,
           children: [
             // প্রিমিয়াম স্ট্যাটাস কার্ড
             Container(
@@ -92,7 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               decoration: BoxDecoration(
                 color: const Color(0xFF0A192F),
                 borderRadius: BorderRadius.circular(15),
-                boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, 4))],
+                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, 4))],
               ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,3 +166,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
+
