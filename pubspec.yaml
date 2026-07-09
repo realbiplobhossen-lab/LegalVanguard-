@@ -1,26 +1,9 @@
-name: legal_vanguard
-description: "A Premium Legal Practice Management App for Apprenticed Lawyers"
-publish_to: 'none'
-version: 1.0.0+1
-
-environment:
-  sdk: '>=3.2.0 <4.0.0'
-
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.6
-  firebase_core: ^2.27.0
-  cloud_firestore: ^4.15.5
-  firebase_storage: ^11.6.6
-  speech_to_text: ^6.6.0
-  intl: ^0.19.0
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
-
-flutter:
-  uses-material-design: true
+  speech_to_text: ^6.1.1
+  camera: ^0.10.5+5
+  path_provider: ^2.1.1
+  pdf: ^3.10.7
+  http: ^1.2.0
   
